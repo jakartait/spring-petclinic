@@ -1,16 +1,23 @@
 #!groovy
+
 pipeline {
-    agent none
-   stages {     
+  agent none
+  stages {
     stage('Maven Install') {
-      agent {         
-       docker {          
-         image 'maven:latest'         
-     }       
-  }       
-  steps {
-       sh 'mvn clean install'
-       }
-     }
-   }
- }
+      agent {
+        docker {
+          image 'maven:latest'
+        }
+      }
+      steps {
+        sh 'mvn clean install'
+      }
+    }
+    stage('Docker Build') {
+      agent any
+      steps {
+        sh 'docker build -t jakartait/spring-petclinic:latest .'
+      }
+    }
+  }
+}
